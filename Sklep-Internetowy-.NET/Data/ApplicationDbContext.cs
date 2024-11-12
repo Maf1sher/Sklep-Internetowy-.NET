@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Sklep_Internetowy_.NET.Models.Entity;
 
 namespace test_do_projektu.Data
 {
@@ -9,5 +10,6 @@ namespace test_do_projektu.Data
             
         }
         
+        public DbSet<Product> Products { get; set; }
     }
 }
