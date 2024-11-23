@@ -40,5 +40,12 @@ namespace Sklep_Internetowy_.NET.Models.Entity
         [MaxLength(50, ErrorMessage = "Max 50 character allowed")]
         public string Address { get; set; }
 
+        [Required(ErrorMessage = "Role is required")]
+        [MaxLength(50)]
+        public string Role { get; set; }
+
+        public List<Order> Ordes { get; set; } = new List<Order>();
+
+
     }
 }

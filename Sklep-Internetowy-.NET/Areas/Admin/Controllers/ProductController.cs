@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sklep_Internetowy_.NET.Models.ViewModel;
+using Microsoft.EntityFrameworkCore;
+using Sklep_Internetowy_.NET.Models.Dto;
 using Sklep_Internetowy_.NET.Models.Entity;
 using test_do_projektu.Data;
 
-namespace Sklep_Internetowy_.NET.Controllers
+namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext dbContext;
@@ -13,11 +15,31 @@ namespace Sklep_Internetowy_.NET.Controllers
         {
             this.dbContext = dbContext;
         }
-        public IActionResult Index()
+
+        [HttpGet]
+        public IActionResult Add()
         {
             return View();
         }
 
+        [HttpPost]
+        public IActionResult Add(AddProductRequest request)
+        {
+            Product product = new Product
+            {
+                Name = request.Name,
+                Description = request.Description,
+                Price = request.Price,
+                Quantity = request.Quantity
+            };
+
+            dbContext.Products.Add(product);
+            dbContext.SaveChanges();
+
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult List()
         {
             List<Product> products = dbContext.Products.ToList();
@@ -30,12 +52,6 @@ namespace Sklep_Internetowy_.NET.Controllers
         {
             Product product = dbContext.Products.Find(id);
             return View(product);
-        }
-
-        public IActionResult AddToCard(Guid id)
-        {
-
-            return View();
         }
     }
 }

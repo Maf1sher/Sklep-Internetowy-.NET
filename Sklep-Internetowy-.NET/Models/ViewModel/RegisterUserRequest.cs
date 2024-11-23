@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Sklep_Internetowy_.NET.Models.Dto
+namespace Sklep_Internetowy_.NET.Models.ViewModel
 {
     public class RegisterUserRequest
     {

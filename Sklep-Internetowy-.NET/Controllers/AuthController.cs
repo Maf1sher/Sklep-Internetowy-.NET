@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sklep_Internetowy_.NET.Data;
-using Sklep_Internetowy_.NET.Models.Dto;
+using Sklep_Internetowy_.NET.Models.ViewModel;
 using Sklep_Internetowy_.NET.Models.Entity;
 using System.Security.Claims;
 using test_do_projektu.Data;
@@ -45,6 +45,7 @@ namespace Sklep_Internetowy_.NET.Controllers
                 user.Zip = request.Zip;
                 user.City = request.City;
                 user.Address = request.Address;
+                user.Role = "USER";
 
                 try
                 {
@@ -93,7 +94,7 @@ namespace Sklep_Internetowy_.NET.Controllers
                     {
                         new Claim(ClaimTypes.Name, user.Email),
                         new Claim("Firstname", user.FirstName),
-                        new Claim(ClaimTypes.Role, "User")
+                        new Claim(ClaimTypes.Role, user.Role)
                     };
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -114,10 +115,17 @@ namespace Sklep_Internetowy_.NET.Controllers
             return RedirectToAction(actionName: "Index", controllerName: "Home");
         }
 
-        [Authorize]
+        [Authorize(Roles = "USER")]
         public IActionResult SecurePage()
         {
             ViewBag.Name = HttpContext.User.Identity.Name; 
+            return View();
+        }
+
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult AdminSecurePage()
+        {
+            ViewBag.Name = HttpContext.User.Identity.Name;
             return View();
         }
     }

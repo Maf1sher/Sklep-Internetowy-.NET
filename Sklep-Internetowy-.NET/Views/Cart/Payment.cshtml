@@ -1,0 +1,16 @@
+﻿@model Sklep_Internetowy_.NET.Models.Entity.Order
+
+<h2>Potwierdzenie płatności</h2>
+
+<p>Dziękujemy za złożenie zamówienia!</p>
+<p>Zamówienie nr: @Model.Id</p>
+
+<h3>Produkty</h3>
+<ul>
+    @foreach (var product in Model.Products)
+    {
+        <li>@product.Name - @product.Price PLN</li>
+    }
+</ul>
+
+<p>Całkowita kwota: @Model.Products.Sum(p => p.Price) PLN</p>

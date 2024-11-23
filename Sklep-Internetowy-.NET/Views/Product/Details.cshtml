@@ -7,10 +7,34 @@
 @model Sklep_Internetowy_.NET.Models.Entity.Product
 
 <div class="container">
-    <img class="col-3" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQH8TM33FKNpGXRmA6NEKh8zpKjeLHwfUB8TA&s" alt="Card image cap">
+    <img class="col-3" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQH8TM33FKNpGXRmA6NEKh8zpKjeLHwfUB8TA&s " alt="Card image cap">
     <p>@Model.Name</p>
     <p>@Model.Description</p>
     <p>@Model.Price</p>
     <p>@Model.Quantity</p>
-    <a class="btn btn-primary">Add to cart</a>
+    <a class="btn btn-primary" asp-action="AddToCart" asp-controller="Cart" asp-route-productId="@Model.Id">Add to cart</a>
 </div>
+
+<script>
+
+    function addToCart(id, name, price) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        let existingProduct = cart.find(item => item.id === id);
+
+        if (existingProduct) {
+            existingProduct.quantity += 1;
+        } else {
+            cart.push({
+                id: id,
+                name: name,
+                price: price,
+                quantity: 1
+            });
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        // updateCartView();
+    }
+</Script>

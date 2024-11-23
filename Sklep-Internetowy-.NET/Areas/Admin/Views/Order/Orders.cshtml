@@ -1,0 +1,84 @@
+﻿@model List<Sklep_Internetowy_.NET.Models.Entity.Order>
+
+@{
+    ViewData["Title"] = "Zamówienia";
+}
+
+<h2>Zamówienia</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Data złożenia</th>
+            <th>Użytkownik</th>
+            <th>Liczba produktów</th>
+            <th>Łączna kwota</th>
+            <th>Status</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>@order.CreatedData</td>
+                @if(order.User == null){
+                    <td></td>
+                }else{
+                    <td>@order.User.FirstName @order.User.LastName</td>
+                }
+                <td>@order.Products.Count</td>
+                <td>@order.Products.Sum(p => p.Price) PLN</td>
+                <td>@(order.User != null ? "Zrealizowane" : "Oczekujące")</td>
+                <td>
+                    <button class="btn btn-info btn-sm" onclick="toggleDetails(@order.Id)">Szczegóły</button>
+                </td>
+            </tr>
+            <tr id="order-details-@order.Id" class="order-details" style="display:none;">
+                <td colspan="7">
+                    <div>
+                        <h4>Produkty w zamówieniu</h4>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nazwa</th>
+                                    <th>Cena</th>
+                                    <th>Ilość</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var product in order.Products)
+                                {
+                                    <tr>
+                                        <td>@product.Name</td>
+                                        <td>@product.Price PLN</td>
+                                        <td>1</td> 
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        <h4>Łączna kwota: @order.Products.Sum(p => p.Price) PLN</h4>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function toggleDetails(orderId) {
+            var detailsRow = $("#order-details-" + orderId);
+            if (detailsRow.is(":visible")) {
+                detailsRow.hide();
+            } else {
+                detailsRow.show();
+            }
+        }
+    </script>
+}
