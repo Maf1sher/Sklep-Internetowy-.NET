@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sklep_Internetowy_.NET.Models.Dto;
 using Sklep_Internetowy_.NET.Models.Entity;
@@ -7,6 +8,7 @@ using test_do_projektu.Data;
 namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "ADMIN")]
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext dbContext;
@@ -36,7 +38,20 @@ namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
             dbContext.Products.Add(product);
             dbContext.SaveChanges();
 
-            return View();
+            return RedirectToAction("List");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(Guid id)
+        {
+            var produckt = dbContext.Products.Find(id);
+
+
+            if (produckt == null)
+                return NotFound();
+            dbContext.Products.Remove(produckt);
+            dbContext.SaveChanges();
+            return RedirectToAction("List");
         }
 
         [HttpGet]

@@ -48,22 +48,24 @@ namespace Sklep_Internetowy_.NET.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateCart(Guid productId, int quantity)
+        public IActionResult UpdateCart([FromBody] UpdateCartRequest request)
         {
+            // Pobranie koszyka z cookies (lub sesji)
             var cart = GetCartFromCookies();
-            var cartItem = cart.FirstOrDefault(p => p.Product.Id == productId);
 
-            if (cartItem != null && quantity > 0)
+            // Znalezienie produktu w koszyku
+            var cartItem = cart.FirstOrDefault(c => c.Product.Id.Equals(request.ProductId));
+            if (cartItem != null)
             {
-                cartItem.Quantity = quantity;
-            }
-            else if (cartItem != null && quantity == 0)
-            {
-                cart.Remove(cartItem);
+                // Aktualizacja ilości produktu
+                cartItem.Quantity = request.Quantity;
+
+                // Zapisanie zaktualizowanego koszyka do cookies
+                SaveCartToCookies(cart);
             }
 
-            SaveCartToCookies(cart);
-            return RedirectToAction("Index");
+            // Zwrócenie statusu OK
+            return Ok(new { success = true });
         }
 
         public IActionResult RemoveFromCart(Guid productId)
@@ -82,13 +84,11 @@ namespace Sklep_Internetowy_.NET.Controllers
 
         private List<CartItem> GetCartFromCookies()
         {
-            if (Request.Cookies[CartCookieKey] == null)
+            var cookie = Request.Cookies[CartCookieKey];
+            if (cookie == null)
             {
                 return new List<CartItem>();
             }
-
-            var cookie = Request.Cookies[CartCookieKey];
-            
 
             return JsonSerializer.Deserialize<List<CartItem>>(cookie) ?? new List<CartItem>();
         }

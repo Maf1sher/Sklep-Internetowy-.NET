@@ -33,11 +33,9 @@ else
                                 <p class="text-truncate mb-4 mb-md-0">
                                     @product.Product.Description
                                 </p>
-                                <form asp-action="UpdateCart" method="post">
-                                    <input type="hidden" name="productId" value="@product.Product.Id" />
-                                    <input type="number" name="quantity" value="@product.Quantity" min="0" class="form-control" />
-                                    <input type="submit" value="Aktualizuj" class="btn btn-primary" />
-                                </form>
+                                        <button class="btn btn-secondary btn-sm" onclick="updateQuantity('@product.Product.Id', @product.Quantity - 1)">-</button>
+                                        <span class="mx-2">@product.Quantity</span>
+                                        <button class="btn btn-secondary btn-sm" onclick="updateQuantity('@product.Product.Id', @product.Quantity + 1)">+</button>
                                 </div>
                                 <div class="col-sm-12 col-md-3 col-lg-3 col-xl-2 col-xxl-2 border-sm-start-none border-start">
                                 <div class="d-flex flex-row align-items-center mb-1">
@@ -60,5 +58,31 @@ else
 
     <h3>Łączna kwota: @Model.Sum(item => item.Product.Price * item.Quantity)</h3>
 
-    <a class="btn btn-success" asp-action="Checkout">Przejdź do płatności</a>
+    <a class="btn btn-success" asp-action="Checkout">DOSTAWA I PŁATNOŚĆ</a>
+
+
+
+    @section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function updateQuantity(productId, newQuantity) {
+            if (newQuantity < 1) {
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("UpdateCart", "Cart")',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ productId: productId, quantity: newQuantity }),
+                success: function (response) {
+                    location.reload();
+                },
+                error: function () {
+                    alert("Wystąpił błąd podczas aktualizacji koszyka.");
+                }
+            });
+        }
+    </script>
+    }
 }
