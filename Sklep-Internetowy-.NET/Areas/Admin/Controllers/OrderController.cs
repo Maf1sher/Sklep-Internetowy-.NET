@@ -27,6 +27,9 @@ namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
             var orders = _context.Orders
                                  .Include(o => o.User)
                                  .Include(o => o.Products)
+                                 .Include(o => o.Status)
+                                 .Include(o => o.ShippingMethod)
+                                 .Include(o => o.PaymentMethod)
                                  .OrderByDescending(o => o.CreatedData)
                                  .ToList();
 

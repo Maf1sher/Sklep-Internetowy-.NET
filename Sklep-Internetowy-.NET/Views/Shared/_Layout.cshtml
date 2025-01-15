@@ -28,7 +28,13 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="List">Products</a>
-                    </li>  
+                    </li>
+                    @if (Context.User.IsInRole("ADMIN"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="Index">Admin Panel</a>
+                        </li>
+                    }
                 </ul>
                     @await Html.PartialAsync("_cart")
                     @await Html.PartialAsync("_LoginPartial")

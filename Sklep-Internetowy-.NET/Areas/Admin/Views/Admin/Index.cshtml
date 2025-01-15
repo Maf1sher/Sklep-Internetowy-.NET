@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">Admin Panel</h1>
+
+    <div class="list-group">
+        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" asp-area="Admin" asp-controller="Product" asp-action="List">
+            <span>Products</span>
+            <i class="fas fa-box"></i>
+        </a>
+
+        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" asp-area="Admin" asp-controller="Order" asp-action="Orders">
+            <span>Orders</span>
+            <i class="fas fa-receipt"></i>
+        </a>
+
+        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" asp-area="Admin" asp-controller="User" asp-action="Index">
+            <span>Manage Users</span>
+            <i class="fas fa-users-cog"></i>
+        </a>
+    </div>
+</div>

@@ -9,6 +9,15 @@ namespace Sklep_Internetowy_.NET.Models.Entity
 
         public DateTime CreatedData { get; set; } = DateTime.Now;
 
+        public OrderStatus? Status { get; set; }
+        public int? StatusId { get; set; }
+
+        public ShippingMethod? ShippingMethod { get; set; }
+        public int? ShippingMethodId { get; set; }
+
+        public PaymentMethod? PaymentMethod { get; set; }
+        public int? PaymentMethodId { get; set; }
+
         public User? User { get; set; }
         public int? UserId { get; set; }
 

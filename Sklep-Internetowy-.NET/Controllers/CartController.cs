@@ -145,6 +145,9 @@ namespace Sklep_Internetowy_.NET.Controllers
                 var order = new Order
                 {
                     CreatedData = DateTime.UtcNow,
+                    Status = _context.OrderStatuses.FirstOrDefault(p => p.StatusName == "Nowe"),
+                    PaymentMethod = null,
+                    ShippingMethod = null,
                     User = user,
                     //Products = new List<Product>(),
                     UserId = user?.Id ?? null

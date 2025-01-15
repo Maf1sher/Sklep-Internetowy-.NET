@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using test_do_projektu.Data;
@@ -11,9 +12,11 @@ using test_do_projektu.Data;
 namespace Sklep_Internetowy_.NET.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241126105217_PaymentMethod4")]
+    partial class PaymentMethod4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,11 +54,9 @@ namespace Sklep_Internetowy_.NET.Migrations
                     b.Property<int?>("PaymentMethodId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("ShippingMethodId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("StatusId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("integer");
@@ -64,30 +65,9 @@ namespace Sklep_Internetowy_.NET.Migrations
 
                     b.HasIndex("PaymentMethodId");
 
-                    b.HasIndex("ShippingMethodId");
-
-                    b.HasIndex("StatusId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.OrderStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("StatusName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OrderStatuses");
                 });
 
             modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.PaymentMethod", b =>
@@ -130,23 +110,6 @@ namespace Sklep_Internetowy_.NET.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.ShippingMethod", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ShippingName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ShippingMethods");
                 });
 
             modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.User", b =>
@@ -230,38 +193,16 @@ namespace Sklep_Internetowy_.NET.Migrations
                         .WithMany("Orders")
                         .HasForeignKey("PaymentMethodId");
 
-                    b.HasOne("Sklep_Internetowy_.NET.Models.Entity.ShippingMethod", "ShippingMethod")
-                        .WithMany("Orders")
-                        .HasForeignKey("ShippingMethodId");
-
-                    b.HasOne("Sklep_Internetowy_.NET.Models.Entity.OrderStatus", "Status")
-                        .WithMany("Orders")
-                        .HasForeignKey("StatusId");
-
                     b.HasOne("Sklep_Internetowy_.NET.Models.Entity.User", "User")
                         .WithMany("Ordes")
                         .HasForeignKey("UserId");
 
                     b.Navigation("PaymentMethod");
 
-                    b.Navigation("ShippingMethod");
-
-                    b.Navigation("Status");
-
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.OrderStatus", b =>
-                {
-                    b.Navigation("Orders");
-                });
-
             modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.PaymentMethod", b =>
-                {
-                    b.Navigation("Orders");
-                });
-
-            modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.ShippingMethod", b =>
                 {
                     b.Navigation("Orders");
                 });

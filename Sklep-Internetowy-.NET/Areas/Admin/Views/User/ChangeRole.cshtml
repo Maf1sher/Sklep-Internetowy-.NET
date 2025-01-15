@@ -1,0 +1,18 @@
+﻿@model Sklep_Internetowy_.NET.Models.Entity.User
+
+<h1>Change Role for @Model.FirstName @Model.LastName</h1>
+
+<form asp-action="ChangeRole" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label for="Role">Current Role: @Model.Role</label>
+        <select asp-for="Role" class="form-control">
+            <option value="User">User</option>
+            <option value="Admin">Admin</option>
+            <option value="Moderator">Moderator</option>
+        </select>
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Change Role</button>
+</form>

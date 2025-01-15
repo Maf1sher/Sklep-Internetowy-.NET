@@ -13,6 +13,9 @@ namespace test_do_projektu.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<PaymentMethod> PaymentMethods { get; set; }
+        public DbSet<ShippingMethod> ShippingMethods { get; set; }
+        public DbSet<OrderStatus> OrderStatuses { get; set; }
         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,9 +34,29 @@ namespace test_do_projektu.Data
             {
                 eb.HasMany(w => w.Products)
                 .WithMany(t => t.Orders);
+
             });
 
-        }
+            modelBuilder.Entity<PaymentMethod>(eb =>
+            {
+                eb.HasMany(w => w.Orders)
+                .WithOne(t => t.PaymentMethod)
+                .HasForeignKey(c => c.PaymentMethodId);
+            });
 
+            modelBuilder.Entity<ShippingMethod>(eb =>
+            {
+                eb.HasMany(w => w.Orders)
+                .WithOne(t => t.ShippingMethod)
+                .HasForeignKey(c => c.ShippingMethodId);
+            });
+
+            modelBuilder.Entity<OrderStatus>(eb =>
+            {
+                eb.HasMany(w => w.Orders)
+                .WithOne(t => t.Status)
+                .HasForeignKey(c => c.StatusId);
+            });
+        }
     }
 }
