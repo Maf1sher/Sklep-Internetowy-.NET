@@ -14,3 +14,6 @@
 </ul>
 
 <p>Całkowita kwota: @Model.Products.Sum(p => p.Price) PLN</p>
+
+<p>Metoda dostawy: @Model.ShippingMethod.ShippingName</p>
+<p>Metoda płatności: @Model.PaymentMethod.MethodName</p>

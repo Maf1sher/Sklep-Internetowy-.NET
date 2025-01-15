@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Sklep_Internetowy_.NET.Models.Entity;
 using Sklep_Internetowy_.NET.Models.ViewModel;
+using System.Diagnostics;
 using System.Text.Json;
 using test_do_projektu.Data;
 
@@ -50,21 +51,16 @@ namespace Sklep_Internetowy_.NET.Controllers
         [HttpPost]
         public IActionResult UpdateCart([FromBody] UpdateCartRequest request)
         {
-            // Pobranie koszyka z cookies (lub sesji)
             var cart = GetCartFromCookies();
 
-            // Znalezienie produktu w koszyku
             var cartItem = cart.FirstOrDefault(c => c.Product.Id.Equals(request.ProductId));
             if (cartItem != null)
             {
-                // Aktualizacja ilości produktu
                 cartItem.Quantity = request.Quantity;
 
-                // Zapisanie zaktualizowanego koszyka do cookies
                 SaveCartToCookies(cart);
             }
 
-            // Zwrócenie statusu OK
             return Ok(new { success = true });
         }
 
@@ -111,27 +107,28 @@ namespace Sklep_Internetowy_.NET.Controllers
                 return RedirectToAction("Index", "Cart");
             }
 
+            var model = new CheckoutViewModel();
+
             if (User.Identity.IsAuthenticated)
             {
                 var user = _context.Users.FirstOrDefault(u => u.Email == User.Identity.Name);
                 if (user != null)
                 {
-                    var model = new CheckoutViewModel
-                    {
-                        FirstName = user.FirstName,
-                        LastName = user.LastName,
-                        Email = user.Email,
-                        Address = user.Address,
-                        City = user.City,
-                        Zip = user.Zip,
-                        Country = user.Country
-                    };
-                    return View(model);
+                    model.FirstName = user.FirstName;
+                    model.LastName = user.LastName;
+                    model.Email = user.Email;
+                    model.Address = user.Address;
+                    model.City = user.City;
+                    model.Zip = user.Zip;
+                    model.Country = user.Country;
+                    model.ShippingMethods = _context.ShippingMethods.ToList();
+                    model.PaymentMethods = _context.PaymentMethods.ToList();
                 }
             }
 
-            return View(new CheckoutViewModel());
+            return View(model);
         }
+
 
         [HttpPost]
         public IActionResult Checkout(CheckoutViewModel model)
@@ -146,10 +143,9 @@ namespace Sklep_Internetowy_.NET.Controllers
                 {
                     CreatedData = DateTime.UtcNow,
                     Status = _context.OrderStatuses.FirstOrDefault(p => p.StatusName == "Nowe"),
-                    PaymentMethod = null,
-                    ShippingMethod = null,
+                    PaymentMethodId = model.PaymentMethodId,
+                    ShippingMethodId = model.ShippingMethodId,
                     User = user,
-                    //Products = new List<Product>(),
                     UserId = user?.Id ?? null
                 };
 
@@ -170,13 +166,17 @@ namespace Sklep_Internetowy_.NET.Controllers
 
                 return RedirectToAction("Payment", new { orderId = order.Id });
             }
-
             return View(model);
         }
 
         public IActionResult Payment(int orderId)
         {
-            var order = _context.Orders.Include(o => o.Products).FirstOrDefault(o => o.Id == orderId);
+            var order = _context.Orders.Include(o => o.User)
+                                 .Include(o => o.Products)
+                                 .Include(o => o.Status)
+                                 .Include(o => o.ShippingMethod)
+                                 .Include(o => o.PaymentMethod)
+                                 .FirstOrDefault(o => o.Id == orderId);
             if (order == null)
             {
                 return NotFound();

@@ -1,44 +1,83 @@
 ﻿@model Sklep_Internetowy_.NET.Models.ViewModel.CheckoutViewModel
 
-<h2>Checkout</h2>
+<h2 class="mb-4">Checkout</h2>
 
 <form asp-action="Checkout" method="post">
-    <div>
-        <label for="FirstName">First Name</label>
-        <input asp-for="FirstName" class="form-control" />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="FirstName">First Name</label>
+            <input asp-for="FirstName" class="form-control" placeholder="Enter your first name" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="LastName">Last Name</label>
+            <input asp-for="LastName" class="form-control" placeholder="Enter your last name" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
     </div>
-    <div>
-        <label for="LastName">Last Name</label>
-        <input asp-for="LastName" class="form-control" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
-    </div>
-    <div>
+
+    <div class="mb-3">
         <label for="Email">Email</label>
-        <input asp-for="Email" class="form-control" />
+        <input asp-for="Email" class="form-control" placeholder="Enter your email" />
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
-    <div>
+
+    <div class="mb-3">
         <label for="Address">Address</label>
-        <input asp-for="Address" class="form-control" />
+        <input asp-for="Address" class="form-control" placeholder="Enter your address" />
         <span asp-validation-for="Address" class="text-danger"></span>
     </div>
-    <div>
-        <label for="City">City</label>
-        <input asp-for="City" class="form-control" />
-        <span asp-validation-for="City" class="text-danger"></span>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="City">City</label>
+            <input asp-for="City" class="form-control" placeholder="Enter your city" />
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="Zip">Zip Code</label>
+            <input asp-for="Zip" class="form-control" placeholder="Enter your zip code" />
+            <span asp-validation-for="Zip" class="text-danger"></span>
+        </div>
     </div>
-    <div>
-        <label for="Zip">Zip Code</label>
-        <input asp-for="Zip" class="form-control" />
-        <span asp-validation-for="Zip" class="text-danger"></span>
-    </div>
-    <div>
+
+    <div class="mb-3">
         <label for="Country">Country</label>
-        <input asp-for="Country" class="form-control" />
+        <input asp-for="Country" class="form-control" placeholder="Enter your country" />
         <span asp-validation-for="Country" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Przejdź do płatności</button>
+
+    <div class="mb-4">
+        <label for="ShippingMethodId" class="form-label">Shipping Method</label>
+        <div class="form-check">
+            @foreach (var method in Model.ShippingMethods)
+            {
+                <div class="form-check">
+                    <input type="radio" asp-for="ShippingMethodId" value="@method.Id" id="shipping_@method.Id" class="form-check-input" />
+                    <label for="shipping_@method.Id" class="form-check-label">@method.ShippingName</label>
+                </div>
+            }
+        </div>
+        <span asp-validation-for="ShippingMethodId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-4">
+        <label for="PaymentMethodId" class="form-label">Payment Method</label>
+        <div class="form-check">
+            @foreach (var method in Model.PaymentMethods)
+            {
+                <div class="form-check">
+                    <input type="radio" asp-for="PaymentMethodId" value="@method.Id" id="payment_@method.Id" class="form-check-input" />
+                    <label for="payment_@method.Id" class="form-check-label">@method.MethodName</label>
+                </div>
+            }
+        </div>
+        <span asp-validation-for="PaymentMethodId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Confirm Order</button>
 </form>
 
 @section Scripts {
