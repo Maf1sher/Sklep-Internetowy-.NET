@@ -151,15 +151,7 @@ namespace Sklep_Internetowy_.NET.Controllers
                 };
 
                 var cart = GetCartFromCookies();
-                //foreach (var cartItem in cart)
-                //{
-                //    var product = _context.Products.FirstOrDefault(p => p.Id == cartItem.Product.Id);
-                //    if (product != null)
-                //    {
-                //       order.Products.Add(product);
 
-                //    }
-                //}
                 foreach (var cartItem in cart)
                 {
                     var product = _context.Products.FirstOrDefault(p => p.Id == cartItem.Product.Id);

@@ -28,29 +28,8 @@ namespace test_do_projektu.Data
                 .HasForeignKey(w => w.UserId);
             });
 
-            //modelBuilder.Entity<OrderProduct>()
-            //    .HasKey(c => new { c.OrderId, c.ProductId });
-
-            //modelBuilder.Entity<Order>(eb =>
-            //{
-            //    eb.HasMany(w => w.Products)
-            //    .WithMany(t => t.Orders)
-            //    .UsingEntity<OrderProduct>(
-            //        w => w.HasOne(wit => wit.Product)
-            //        .WithMany()
-            //        .HasForeignKey(wit => wit.ProductId),
-
-            //        w => w.HasOne(wit => wit.Order)
-            //        .WithMany()
-            //        .HasForeignKey(wit => wit.OrderId),
-
-            //        wit => wit.HasKey(x => x.Id)
-            //        );
-
-            //});
-
             modelBuilder.Entity<OrderProduct>()
-        .HasKey(op => new { op.OrderId, op.ProductId });
+                .HasKey(op => new { op.OrderId, op.ProductId });
 
             modelBuilder.Entity<OrderProduct>()
                 .HasOne(op => op.Order)
@@ -61,19 +40,6 @@ namespace test_do_projektu.Data
                 .HasOne(op => op.Product)
                 .WithMany(p => p.OrderProducts)
                 .HasForeignKey(op => op.ProductId);
-
-            //modelBuilder.Entity<OrderProduct>()
-            //    .HasKey(op => new { op.OrderId, op.ProductId });
-
-            //modelBuilder.Entity<OrderProduct>()
-            //    .HasOne(op => op.Order)
-            //    .WithMany(o => o.OrderProducts)
-            //    .HasForeignKey(op => op.OrderId);
-
-            //modelBuilder.Entity<OrderProduct>()
-            //    .HasOne(op => op.Product)
-            //    .WithMany(p => p.OrderProducts)
-            //    .HasForeignKey(op => op.ProductId);
 
             modelBuilder.Entity<PaymentMethod>(eb =>
             {

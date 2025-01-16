@@ -21,7 +21,6 @@ namespace Sklep_Internetowy_.NET.Models.Entity
         public User? User { get; set; }
         public int? UserId { get; set; }
 
-        //public List<Product> Products { get; set; } = new List<Product>();
         public List<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
     }
 }

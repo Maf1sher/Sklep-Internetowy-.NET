@@ -1,29 +1,37 @@
 ﻿@model Sklep_Internetowy_.NET.Models.Entity.Product
 
-<div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl-2 col-6 mb-3">
-    <a href="@Url.Action("Details", "Product", new { id = Model.Id })" class="card h-100 shadow-lg border-0 rounded text-decoration-none">
-        <div class="card-img-top-container">
-            @if (!string.IsNullOrEmpty(Model.ImagePath))
+<a href="@Url.Action("Details", "Product", new { id = Model.Id })" class="card h-100 shadow-lg border-0 rounded text-decoration-none">
+    <div class="card-img-top-container">
+        @if (!string.IsNullOrEmpty(Model.ImagePath))
+        {
+            <img src="@Url.Content("~/")@Model.ImagePath" alt="@Model.Name" class="card-img-top" style="object-fit: cover; height: 200px;" />
+        }
+        else
+        {
+            <img src="https://dl.memuplay.com/new_market/img/com.innersloth.spacemafia.icon.2024-10-24-12-41-15.png"
+                 class="card-img-top" alt="@Model.Name" style="object-fit: cover; height: 200px;" />
+        }
+    </div>
+
+    <div class="card-body d-flex flex-column">
+        <h5 class="card-title text-center mb-2" style="font-size: 1.1rem; font-weight: bold;">@Model.Name</h5>
+
+        <div class="d-flex justify-content-between">
+            @if (Model.IsOnSale)
             {
-                <img src="@Url.Content("~/")@Model.ImagePath" alt="@Model.Name" class="card-img-top" style="object-fit: cover; height: 200px;" />
+                <h6 class="text-danger mb-2" style="font-size: 1.1rem;">
+                    <span class="text-decoration-line-through text-muted me-2" style="font-size: 0.9rem;">@Model.PreviousPrice zł</span>
+                    @Model.Price zł
+                </h6>
             }
             else
             {
-                <img src="https://dl.memuplay.com/new_market/img/com.innersloth.spacemafia.icon.2024-10-24-12-41-15.png"
-                     class="card-img-top" alt="@Model.Name" style="object-fit: cover; height: 200px;" />
+                <h6 class="text-dark mb-2" style="font-size: 1rem;">@Model.Price zł</h6>
             }
         </div>
 
-        <div class="card-body d-flex flex-column">
-            <h5 class="card-title text-center mb-2" style="font-size: 1.1rem; font-weight: bold;">@Model.Name</h5>
-
-            <div class="d-flex justify-content-between">
-                <h6 class="text-dark mb-2" style="font-size: 1rem;">@Model.Price zł</h6>
-            </div>
-
-            <div class="d-flex justify-content-between">
-                <p class="text-muted mb-2" style="font-size: 0.9rem;">Available: <span class="fw-bold">@Model.Quantity</span></p>
-            </div>
+        <div class="d-flex justify-content-between">
+            <p class="text-muted mb-2" style="font-size: 0.9rem;">Available: <span class="fw-bold">@Model.Quantity</span></p>
         </div>
-    </a>
-</div>
+    </div>
+</a>

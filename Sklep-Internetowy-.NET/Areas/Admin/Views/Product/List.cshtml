@@ -12,7 +12,51 @@
         <div class="row">
             @foreach (var product in Model)
             {
-                @Html.Partial("_ProductCard", product)
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl-2 col-6 mb-3">
+                    <div class="d-flex">
+                        <form asp-action="Delete" asp-controller="Product" method="post" class="mt-2">
+                            <input type="hidden" name="id" value="@product.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm w-auto">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+
+                        @if (product.IsOnSale)
+                        {
+                            <form asp-action="RemoveDiscount" asp-controller="Product" method="post" class="ms-2 mt-2">
+                                <input type="hidden" name="id" value="@product.Id" />
+                                <button type="submit" class="btn btn-secondary btn-sm w-auto">Usuń Przecenę</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <button class="btn btn-warning btn-sm ms-2 mt-2" data-bs-toggle="modal" data-bs-target="#discountModal-@product.Id">
+                                Przecen
+                            </button>
+                        }
+                    </div>
+                    @Html.Partial("_ProductCard", product)
+                </div>
+                <div class="modal fade" id="discountModal-@product.Id" tabindex="-1" aria-labelledby="discountModalLabel-@product.Id" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="discountModalLabel-@product.Id">Przecen Produkt: @product.Name</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form asp-action="DiscountProduct" asp-controller="Product" method="post">
+                                    <input type="hidden" name="id" value="@product.Id" />
+                                    <div class="mb-3">
+                                        <label for="newPrice-@product.Id" class="form-label">Nowa Cena (PLN)</label>
+                                        <input type="number" class="form-control" id="newPrice-@product.Id" name="newPrice" min="0.01" step="0.01" required />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Zapisz Zmiany</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
         </div>
     </div>
