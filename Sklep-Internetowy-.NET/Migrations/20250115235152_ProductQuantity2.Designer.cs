@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using test_do_projektu.Data;
@@ -11,9 +12,11 @@ using test_do_projektu.Data;
 namespace Sklep_Internetowy_.NET.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250115235152_ProductQuantity2")]
+    partial class ProductQuantity2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,20 +63,33 @@ namespace Sklep_Internetowy_.NET.Migrations
 
             modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.OrderProduct", b =>
                 {
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("ProductId")
+                    b.Property<int>("Id")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("OrderId1")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("ProductId1")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
-                    b.HasKey("OrderId", "ProductId");
+                    b.HasKey("ProductId", "OrderId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("OrderId");
 
-                    b.ToTable("OrderProducts");
+                    b.HasIndex("OrderId1");
+
+                    b.HasIndex("ProductId1");
+
+                    b.ToTable("OrderProduct");
                 });
 
             modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.OrderStatus", b =>
@@ -91,28 +107,6 @@ namespace Sklep_Internetowy_.NET.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OrderStatuses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            StatusName = "Nowe"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            StatusName = "W trakcie realizacji"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            StatusName = "Zrealizowane"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            StatusName = "Anulowane"
-                        });
                 });
 
             modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.PaymentMethod", b =>
@@ -130,23 +124,6 @@ namespace Sklep_Internetowy_.NET.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PaymentMethods");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            MethodName = "Blik"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            MethodName = "Przelew bankowy"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            MethodName = "PayU"
-                        });
                 });
 
             modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.Product", b =>
@@ -189,23 +166,6 @@ namespace Sklep_Internetowy_.NET.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ShippingMethods");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ShippingName = "InPost"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ShippingName = "DHL"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ShippingName = "Odbiór osobisty"
-                        });
                 });
 
             modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.User", b =>
@@ -298,16 +258,24 @@ namespace Sklep_Internetowy_.NET.Migrations
             modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.OrderProduct", b =>
                 {
                     b.HasOne("Sklep_Internetowy_.NET.Models.Entity.Order", "Order")
-                        .WithMany("OrderProducts")
+                        .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Sklep_Internetowy_.NET.Models.Entity.Product", "Product")
+                    b.HasOne("Sklep_Internetowy_.NET.Models.Entity.Order", null)
                         .WithMany("OrderProducts")
+                        .HasForeignKey("OrderId1");
+
+                    b.HasOne("Sklep_Internetowy_.NET.Models.Entity.Product", "Product")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Sklep_Internetowy_.NET.Models.Entity.Product", null)
+                        .WithMany("OrderProducts")
+                        .HasForeignKey("ProductId1");
 
                     b.Navigation("Order");
 

@@ -8,6 +8,6 @@ public class Product
     public decimal Price { get; set; }
     public int Quantity { get; set; }
 
-    //public List<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
-    public List<Order> Orders { get; set; } = new List<Order>();
+    public List<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
+    //public List<Order> Orders { get; set; } = new List<Order>();
 }

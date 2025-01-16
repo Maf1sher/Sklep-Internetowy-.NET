@@ -16,6 +16,7 @@ namespace test_do_projektu.Data
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<ShippingMethod> ShippingMethods { get; set; }
         public DbSet<OrderStatus> OrderStatuses { get; set; }
+        public DbSet<OrderProduct> OrderProducts { get; set; }
         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -30,12 +31,49 @@ namespace test_do_projektu.Data
             //modelBuilder.Entity<OrderProduct>()
             //    .HasKey(c => new { c.OrderId, c.ProductId });
 
-            modelBuilder.Entity<Order>(eb =>
-            {
-                eb.HasMany(w => w.Products)
-                .WithMany(t => t.Orders);
+            //modelBuilder.Entity<Order>(eb =>
+            //{
+            //    eb.HasMany(w => w.Products)
+            //    .WithMany(t => t.Orders)
+            //    .UsingEntity<OrderProduct>(
+            //        w => w.HasOne(wit => wit.Product)
+            //        .WithMany()
+            //        .HasForeignKey(wit => wit.ProductId),
 
-            });
+            //        w => w.HasOne(wit => wit.Order)
+            //        .WithMany()
+            //        .HasForeignKey(wit => wit.OrderId),
+
+            //        wit => wit.HasKey(x => x.Id)
+            //        );
+
+            //});
+
+            modelBuilder.Entity<OrderProduct>()
+        .HasKey(op => new { op.OrderId, op.ProductId });
+
+            modelBuilder.Entity<OrderProduct>()
+                .HasOne(op => op.Order)
+                .WithMany(o => o.OrderProducts)
+                .HasForeignKey(op => op.OrderId);
+
+            modelBuilder.Entity<OrderProduct>()
+                .HasOne(op => op.Product)
+                .WithMany(p => p.OrderProducts)
+                .HasForeignKey(op => op.ProductId);
+
+            //modelBuilder.Entity<OrderProduct>()
+            //    .HasKey(op => new { op.OrderId, op.ProductId });
+
+            //modelBuilder.Entity<OrderProduct>()
+            //    .HasOne(op => op.Order)
+            //    .WithMany(o => o.OrderProducts)
+            //    .HasForeignKey(op => op.OrderId);
+
+            //modelBuilder.Entity<OrderProduct>()
+            //    .HasOne(op => op.Product)
+            //    .WithMany(p => p.OrderProducts)
+            //    .HasForeignKey(op => op.ProductId);
 
             modelBuilder.Entity<PaymentMethod>(eb =>
             {
@@ -57,6 +95,25 @@ namespace test_do_projektu.Data
                 .WithOne(t => t.Status)
                 .HasForeignKey(c => c.StatusId);
             });
+
+            modelBuilder.Entity<OrderStatus>().HasData(
+                    new OrderStatus { Id = 1, StatusName = "Nowe" },
+                    new OrderStatus { Id = 2, StatusName = "W trakcie realizacji" },
+                    new OrderStatus { Id = 3, StatusName = "Zrealizowane" },
+                    new OrderStatus { Id = 4, StatusName = "Anulowane" }
+                );
+
+            modelBuilder.Entity<PaymentMethod>().HasData(
+                    new PaymentMethod { Id = 1, MethodName = "Blik" },
+                    new PaymentMethod { Id = 2, MethodName = "Przelew bankowy" },
+                    new PaymentMethod { Id = 3, MethodName = "PayU" }
+                );
+
+            modelBuilder.Entity<ShippingMethod>().HasData(
+                    new ShippingMethod { Id = 1, ShippingName = "InPost" },
+                    new ShippingMethod { Id = 2, ShippingName = "DHL" },
+                    new ShippingMethod { Id = 3, ShippingName = "Odbiór osobisty" }
+                );
         }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using test_do_projektu.Data;
@@ -11,9 +12,11 @@ using test_do_projektu.Data;
 namespace Sklep_Internetowy_.NET.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250116020205_ProductQuantity9")]
+    partial class ProductQuantity9
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,6 +63,12 @@ namespace Sklep_Internetowy_.NET.Migrations
 
             modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.OrderProduct", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
                     b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
@@ -69,7 +78,9 @@ namespace Sklep_Internetowy_.NET.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
-                    b.HasKey("OrderId", "ProductId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
 
@@ -298,13 +309,13 @@ namespace Sklep_Internetowy_.NET.Migrations
             modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.OrderProduct", b =>
                 {
                     b.HasOne("Sklep_Internetowy_.NET.Models.Entity.Order", "Order")
-                        .WithMany("OrderProducts")
+                        .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Sklep_Internetowy_.NET.Models.Entity.Product", "Product")
-                        .WithMany("OrderProducts")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -312,11 +323,6 @@ namespace Sklep_Internetowy_.NET.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.Order", b =>
-                {
-                    b.Navigation("OrderProducts");
                 });
 
             modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.OrderStatus", b =>
@@ -327,11 +333,6 @@ namespace Sklep_Internetowy_.NET.Migrations
             modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.PaymentMethod", b =>
                 {
                     b.Navigation("Orders");
-                });
-
-            modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.Product", b =>
-                {
-                    b.Navigation("OrderProducts");
                 });
 
             modelBuilder.Entity("Sklep_Internetowy_.NET.Models.Entity.ShippingMethod", b =>

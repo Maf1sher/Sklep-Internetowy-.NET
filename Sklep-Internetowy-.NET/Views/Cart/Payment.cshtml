@@ -7,13 +7,13 @@
 
 <h3>Produkty</h3>
 <ul>
-    @foreach (var product in Model.Products)
+   @foreach (var product in Model.OrderProducts)
     {
-        <li>@product.Name - @product.Price PLN</li>
+        <li>@product.Product.Name - product.Price PLN </li>
     }
 </ul>
 
-<p>Całkowita kwota: @Model.Products.Sum(p => p.Price) PLN</p>
+<p>Całkowita kwota: @Model.OrderProducts.Sum(p => p.Product.Price * p.Quantity) PLN</p>
 
 <p>Metoda dostawy: @Model.ShippingMethod.ShippingName</p>
 <p>Metoda płatności: @Model.PaymentMethod.MethodName</p>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Sklep_Internetowy_.NET.Models.Entity;
 using Sklep_Internetowy_.NET.Models.ViewModel;
@@ -150,16 +151,54 @@ namespace Sklep_Internetowy_.NET.Controllers
                 };
 
                 var cart = GetCartFromCookies();
+                //foreach (var cartItem in cart)
+                //{
+                //    var product = _context.Products.FirstOrDefault(p => p.Id == cartItem.Product.Id);
+                //    if (product != null)
+                //    {
+                //       order.Products.Add(product);
+
+                //    }
+                //}
                 foreach (var cartItem in cart)
                 {
                     var product = _context.Products.FirstOrDefault(p => p.Id == cartItem.Product.Id);
+
                     if (product != null)
                     {
-                        order.Products.Add(product);
+                        var existingOrderProduct = order.OrderProducts.FirstOrDefault(op => op.ProductId == product.Id);
+
+                        if (existingOrderProduct != null)
+                        {
+                            existingOrderProduct.Quantity += cartItem.Quantity;
+                        }
+                        else
+                        {
+                            var orderProduct = new OrderProduct
+                            {
+                                OrderId = order.Id,
+                                ProductId = product.Id,
+                                Quantity = cartItem.Quantity
+                            };
+
+                            order.OrderProducts.Add(orderProduct);
+                        }
                     }
                 }
 
                 _context.Orders.Add(order);
+                _context.SaveChanges();
+
+                foreach (var cartItem in cart)
+                {
+                    var orderProduct = _context.OrderProducts.FirstOrDefault(
+                        op => op.ProductId == cartItem.Product.Id &&
+                        op.OrderId == order.Id
+                        );
+
+                    orderProduct.Quantity = cartItem.Quantity;
+                }
+
                 _context.SaveChanges();
 
                 Response.Cookies.Delete(CartCookieKey);
@@ -172,11 +211,17 @@ namespace Sklep_Internetowy_.NET.Controllers
         public IActionResult Payment(int orderId)
         {
             var order = _context.Orders.Include(o => o.User)
-                                 .Include(o => o.Products)
+                                 .Include(o => o.OrderProducts)
+                                    .ThenInclude(op => op.Product)
                                  .Include(o => o.Status)
                                  .Include(o => o.ShippingMethod)
                                  .Include(o => o.PaymentMethod)
                                  .FirstOrDefault(o => o.Id == orderId);
+
+            var orderProducts = _context.OrderProducts
+                .Where(op => op.OrderId == order.Id);
+
+            ViewBag.OrdersProducts = orderProducts;
             if (order == null)
             {
                 return NotFound();

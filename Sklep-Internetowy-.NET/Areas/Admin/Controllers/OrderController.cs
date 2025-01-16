@@ -26,7 +26,8 @@ namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
         {
             var orders = _context.Orders
                                  .Include(o => o.User)
-                                 .Include(o => o.Products)
+                                 .Include(o => o.OrderProducts)
+                                    .ThenInclude(op => op.Product)
                                  .Include(o => o.Status)
                                  .Include(o => o.ShippingMethod)
                                  .Include(o => o.PaymentMethod)
@@ -35,5 +36,39 @@ namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
 
             return View(orders);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateStatus(int orderId, int statusId)
+        {
+            var order = await _context.Orders
+                                       .Include(o => o.Status)
+                                       .Include(o => o.OrderProducts)
+                                            .ThenInclude(op => op.Product)
+                                       .FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            var status = await _context.OrderStatuses.FindAsync(statusId);
+            if (status != null)
+            {
+                order.Status = status;
+
+                if (status.StatusName == "Zrealizowane")
+                {
+                    foreach (var product in order.OrderProducts)
+                    {
+                        product.Quantity = 1;
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Orders");
+        }
+
     }
 }
