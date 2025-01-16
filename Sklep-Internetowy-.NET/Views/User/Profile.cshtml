@@ -1,0 +1,63 @@
+﻿@model Sklep_Internetowy_.NET.Models.ViewModel.UserProfileViewModel
+
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<h1 class="text-center text-primary mb-5">User Profile</h1>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg p-4 mb-5 bg-light rounded">
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-4 text-secondary">Profile Information</h5>
+                    <hr />
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input id="firstName" class="form-control" type="text" value="@Model.FirstName" readonly />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input id="lastName" class="form-control" type="text" value="@Model.LastName" readonly />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input id="email" class="form-control" type="email" value="@Model.Email" readonly />
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="country" class="form-label">Country</label>
+                            <input id="country" class="form-control" type="text" value="@Model.Country" readonly />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="city" class="form-label">City</label>
+                            <input id="city" class="form-control" type="text" value="@Model.City" readonly />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <input id="address" class="form-control" type="text" value="@Model.Address" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="zipCode" class="form-label">Zip Code</label>
+                        <input id="zipCode" class="form-control" type="text" value="@Model.Zip" readonly />
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <a class="btn btn-primary btn-lg mx-2" asp-action="EditProfile" asp-controller="User">Edit Profile</a>
+                        <a class="btn btn-secondary btn-lg mx-2" asp-action="Index" asp-controller="Home">Back to Home</a>
+                        <a class="btn btn-info btn-lg mx-2" asp-controller="User" asp-action="Orders">My Orders</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
