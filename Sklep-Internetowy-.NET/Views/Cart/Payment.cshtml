@@ -1,19 +1,40 @@
 ﻿@model Sklep_Internetowy_.NET.Models.Entity.Order
 
-<h2>Potwierdzenie płatności</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <h2 class="text-center mb-4">Payment Confirmation</h2>
 
-<p>Dziękujemy za złożenie zamówienia!</p>
-<p>Zamówienie nr: @Model.Id</p>
+            <div class="alert alert-success text-center" role="alert">
+                <h4 class="alert-heading">Thank you for your order!</h4>
+                <p>Your order has been successfully placed.</p>
+                <p><strong>Order ID:</strong> @Model.Id</p>
+            </div>
 
-<h3>Produkty</h3>
-<ul>
-   @foreach (var product in Model.OrderProducts)
-    {
-        <li>@product.Product.Name - product.Price PLN </li>
-    }
-</ul>
+            <h3 class="mt-4">Ordered Products</h3>
+            <ul class="list-group mb-4">
+                @foreach (var product in Model.OrderProducts)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>@product.Product.Name</span>
+                        <span>@product.Product.Price PLN</span>
+                    </li>
+                }
+            </ul>
 
-<p>Całkowita kwota: @Model.OrderProducts.Sum(p => p.Product.Price * p.Quantity) PLN</p>
+            <div class="d-flex justify-content-between mb-4">
+                <h4><strong>Total Amount:</strong></h4>
+                <h4><strong>@Model.OrderProducts.Sum(p => p.Product.Price * p.Quantity) PLN</strong></h4>
+            </div>
 
-<p>Metoda dostawy: @Model.ShippingMethod.ShippingName</p>
-<p>Metoda płatności: @Model.PaymentMethod.MethodName</p>
+            <div class="mb-3">
+                <p><strong>Shipping Method:</strong> @Model.ShippingMethod.ShippingName</p>
+                <p><strong>Payment Method:</strong> @Model.PaymentMethod.MethodName</p>
+            </div>
+
+            <div class="text-center">
+                <a href="/" class="btn btn-primary">Go to Homepage</a>
+            </div>
+        </div>
+    </div>
+</div>

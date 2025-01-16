@@ -64,7 +64,7 @@ namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
                 {
                     foreach (var product in order.OrderProducts)
                     {
-                        product.Quantity = 1;
+                        product.Product.Quantity-=product.Quantity;
                     }
                 }
 

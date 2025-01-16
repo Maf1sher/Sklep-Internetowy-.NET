@@ -1,52 +1,65 @@
 ﻿@model List<Sklep_Internetowy_.NET.Models.ViewModel.CartItem>
 
-<h2>Twój koszyk</h2>
+<h2 class="text-center my-5">Your Cart</h2>
 
 @if (Model.Count == 0)
 {
-    <p>Koszyk jest pusty.</p>
+    <p class="text-center">Your cart is empty.</p>
 }
 else
 {
-    <section style="background-color: #eee;">
+    <section style="background-color: #f8f9fa;">
         <div class="container py-5">
             <div class="row justify-content-center mb-3">
                 @foreach (var product in Model)
                 {
-                    <div class="col-sm-8 col-md-12 col-lg-12 col-xl-12 col-xxl-12 col-8">
-                        <div class="card shadow-0 border rounded-3">
+                    <div class="col-sm-8 col-md-12 col-lg-12 col-xl-12 col-xxl-12 col-8 mb-4">
+                        <div class="card shadow border-0 rounded-3">
                             <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-12 col-md-3 col-lg-2 col-xl-2 col-xxl-2 col-12 mb-lg-0">
-                                <div class="bg-image hover-zoom ripple rounded ripple-surface">
-                                            <img src="https://dl.memuplay.com/new_market/img/com.innersloth.spacemafia.icon.2024-10-24-12-41-15.png"
-                                    class="w-100" />
-                                    <a href="#!">
-                                    <div class="hover-overlay">
-                                        <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);"></div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-3 col-lg-2 col-xl-2 col-xxl-2 mb-lg-0">
+                                        <div class="bg-image hover-zoom ripple rounded ripple-surface">
+                                            @if (!string.IsNullOrEmpty(product.Product.ImagePath))
+                                            {
+                                                <a href="@Url.Action("Details", "Product", new { id = product.Product.Id })">
+                                                    <img src="@Url.Content("~/")@product.Product.ImagePath"
+                                                         class="w-100 rounded" style="height: 150px; object-fit: contain;" />
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action("Details", "Product", new { id = product.Product.Id })">
+                                                    <img src="https://dl.memuplay.com/new_market/img/com.innersloth.spacemafia.icon.2024-10-24-12-41-15.png"
+                                                         class="w-100 rounded" style="height: 150px; object-fit: contain;" />
+                                                </a>
+                                            }
+                                        </div>
                                     </div>
-                                    </a>
+
+                                    <div class="col-sm-12 col-md-6 col-lg-7 col-xl-8 col-xxl-8">
+                                        <h5 class="fw-bold">@product.Product.Name</h5>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <button class="btn btn-outline-secondary btn-sm"
+                                                    onclick="updateQuantity('@product.Product.Id', @product.Quantity - 1)">
+                                                -
+                                            </button>
+                                            <span class="mx-3">@product.Quantity</span>
+                                            <button class="btn btn-outline-secondary btn-sm"
+                                                    onclick="updateQuantity('@product.Product.Id', @product.Quantity + 1)">
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-md-3 col-lg-3 col-xl-2 col-xxl-2 border-sm-start-none border-start">
+                                        <div class="d-flex flex-column align-items-center mb-1">
+                                            <h4 class="text-dark mb-1">@product.Product.Price zł</h4>
+                                        </div>
+                                        <div class="d-flex flex-column mt-3">
+                                            <a asp-action="RemoveFromCart" asp-route-productId="@product.Product.Id" class="btn btn-danger btn-sm">Remove</a>
+                                        </div>
+                                    </div>
                                 </div>
-                                </div>
-                                <div class="col-sm-12 col-md-6 col-lg-7 col-xl-8 col-xxl-8">
-                                <h5>@product.Product.Name</h5>
-                                <p class="text-truncate mb-4 mb-md-0">
-                                    @product.Product.Description
-                                </p>
-                                        <button class="btn btn-secondary btn-sm" onclick="updateQuantity('@product.Product.Id', @product.Quantity - 1)">-</button>
-                                        <span class="mx-2">@product.Quantity</span>
-                                        <button class="btn btn-secondary btn-sm" onclick="updateQuantity('@product.Product.Id', @product.Quantity + 1)">+</button>
-                                </div>
-                                <div class="col-sm-12 col-md-3 col-lg-3 col-xl-2 col-xxl-2 border-sm-start-none border-start">
-                                <div class="d-flex flex-row align-items-center mb-1">
-                                    <h4 class="mb-1 me-1">@product.Product.Price zł</h4>
-                                </div>
-                                <div class="d-flex flex-column mt-4">
-                                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm" type="button">Details</button>
-                                    <a asp-action="RemoveFromCart" asp-route-productId="@product.Product.Id" class="btn btn-danger mt-2">Usuń</a>
-                                </div>
-                                </div>
-                            </div>
                             </div>
                         </div>
                     </div>
@@ -54,15 +67,15 @@ else
             </div>
         </div>
     </section>
-            
 
-    <h3>Łączna kwota: @Model.Sum(item => item.Product.Price * item.Quantity)</h3>
+    <div class="container py-4 text-center">
+        <h3 class="fw-bold">Total: @Model.Sum(item => item.Product.Price * item.Quantity) zł</h3>
 
-    <a class="btn btn-success" asp-action="Checkout">DOSTAWA I PŁATNOŚĆ</a>
+        <a class="btn btn-success btn-lg" asp-action="Checkout">CHECKOUT</a>
+    </div>
+}
 
-
-
-    @section Scripts {
+@section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function updateQuantity(productId, newQuantity) {
@@ -79,10 +92,9 @@ else
                     location.reload();
                 },
                 error: function () {
-                    alert("Wystąpił błąd podczas aktualizacji koszyka.");
+                    alert("An error occurred while updating the cart.");
                 }
             });
         }
     </script>
-    }
 }

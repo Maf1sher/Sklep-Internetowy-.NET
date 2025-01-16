@@ -1,51 +1,61 @@
 ﻿@model Sklep_Internetowy_.NET.Areas.Admin.Models.UserEditViewModel
 
-<h1>Edit User</h1>
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Edit User</h1>
 
-<form asp-action="Edit" method="post">
+    <form asp-action="Edit" method="post">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
 
-    <div class="form-group">
-        <label asp-for="FirstName" class="control-label"></label>
-        <input asp-for="FirstName" class="form-control" />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
-    </div>
+                <div class="form-group mb-3">
+                    <label asp-for="FirstName" class="control-label fw-bold"></label>
+                    <input asp-for="FirstName" class="form-control" placeholder="Enter first name" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="LastName" class="control-label"></label>
-        <input asp-for="LastName" class="form-control" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
-    </div>
+                <div class="form-group mb-3">
+                    <label asp-for="LastName" class="control-label fw-bold"></label>
+                    <input asp-for="LastName" class="form-control" placeholder="Enter last name" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="Email" class="control-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Email" class="control-label fw-bold"></label>
+                    <input asp-for="Email" class="form-control" placeholder="Enter email address" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="Country" class="control-label"></label>
-        <input asp-for="Country" class="form-control" />
-        <span asp-validation-for="Country" class="text-danger"></span>
-    </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Country" class="control-label fw-bold"></label>
+                    <input asp-for="Country" class="form-control" placeholder="Enter country" />
+                    <span asp-validation-for="Country" class="text-danger"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="Zip" class="control-label"></label>
-        <input asp-for="Zip" class="form-control" />
-        <span asp-validation-for="Zip" class="text-danger"></span>
-    </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Zip" class="control-label fw-bold"></label>
+                    <input asp-for="Zip" class="form-control" placeholder="Enter zip code" />
+                    <span asp-validation-for="Zip" class="text-danger"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="City" class="control-label"></label>
-        <input asp-for="City" class="form-control" />
-        <span asp-validation-for="City" class="text-danger"></span>
-    </div>
+                <div class="form-group mb-3">
+                    <label asp-for="City" class="control-label fw-bold"></label>
+                    <input asp-for="City" class="form-control" placeholder="Enter city" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="Address" class="control-label"></label>
-        <input asp-for="Address" class="form-control" />
-        <span asp-validation-for="Address" class="text-danger"></span>
-    </div>
+                <div class="form-group mb-4">
+                    <label asp-for="Address" class="control-label fw-bold"></label>
+                    <input asp-for="Address" class="form-control" placeholder="Enter address" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
 
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-action="Index" asp-controller="User" asp-area="Admin" class="btn btn-secondary">Cancel</a>
-</form>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary px-4">Save</button>
+                    <a asp-action="Index" asp-controller="User" asp-area="Admin" class="btn btn-secondary px-4">Cancel</a>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+

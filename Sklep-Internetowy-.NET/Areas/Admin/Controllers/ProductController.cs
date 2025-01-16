@@ -12,10 +12,12 @@ namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext dbContext;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController(ApplicationDbContext dbContext)
+        public ProductController(ApplicationDbContext dbContext, IWebHostEnvironment webHostEnvironment)
         {
             this.dbContext = dbContext;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -25,32 +27,39 @@ namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(AddProductRequest request)
+        public async Task<IActionResult> Add(AddProductRequest request)
         {
+            string imagePath = null;
+            if (request.Image != null)
+            {
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(request.Image.FileName);
+                string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                
+                if (!Directory.Exists(uploadDir))
+                {
+                    Directory.CreateDirectory(uploadDir);
+                }
+
+                imagePath = Path.Combine("images", fileName);
+
+                using (var fileStream = new FileStream(Path.Combine(uploadDir, fileName), FileMode.Create))
+                {
+                    await request.Image.CopyToAsync(fileStream);
+                }
+            }
+
             Product product = new Product
             {
                 Name = request.Name,
                 Description = request.Description,
                 Price = request.Price,
-                Quantity = request.Quantity
+                Quantity = request.Quantity,
+                ImagePath = imagePath
             };
 
             dbContext.Products.Add(product);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
-            return RedirectToAction("List");
-        }
-
-        [HttpGet]
-        public IActionResult Delete(Guid id)
-        {
-            var produckt = dbContext.Products.Find(id);
-
-
-            if (produckt == null)
-                return NotFound();
-            dbContext.Products.Remove(produckt);
-            dbContext.SaveChanges();
             return RedirectToAction("List");
         }
 

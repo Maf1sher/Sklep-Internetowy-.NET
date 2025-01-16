@@ -122,10 +122,10 @@ namespace Sklep_Internetowy_.NET.Controllers
                     model.City = user.City;
                     model.Zip = user.Zip;
                     model.Country = user.Country;
-                    model.ShippingMethods = _context.ShippingMethods.ToList();
-                    model.PaymentMethods = _context.PaymentMethods.ToList();
                 }
             }
+            model.ShippingMethods = _context.ShippingMethods.ToList();
+            model.PaymentMethods = _context.PaymentMethods.ToList();
 
             return View(model);
         }
