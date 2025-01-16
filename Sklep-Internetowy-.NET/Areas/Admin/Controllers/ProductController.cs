@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Sklep_Internetowy_.NET.Areas.Admin.Models;
 using Sklep_Internetowy_.NET.Models.Dto;
 using Sklep_Internetowy_.NET.Models.Entity;
+using System.Diagnostics;
 using test_do_projektu.Data;
 
 namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
@@ -24,44 +25,63 @@ namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Add()
         {
-            return View();
+            var categories = dbContext.Categories.ToList();
+            var viewModel = new AddProductRequest
+            {
+                CategoriesList = dbContext.Categories.ToList()
+            };
+            return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(AddProductRequest request)
+        public IActionResult Add(AddProductRequest model)
         {
-            string imagePath = null;
-            if (request.Image != null)
+            if (!ModelState.IsValid)
             {
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(request.Image.FileName);
-                string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                
-                if (!Directory.Exists(uploadDir))
+                foreach (var modelState in ModelState)
                 {
-                    Directory.CreateDirectory(uploadDir);
-                }
+                    var key = modelState.Key;
+                    var errors = modelState.Value.Errors;
 
-                imagePath = Path.Combine("images", fileName);
-
-                using (var fileStream = new FileStream(Path.Combine(uploadDir, fileName), FileMode.Create))
-                {
-                    await request.Image.CopyToAsync(fileStream);
+                    foreach (var error in errors)
+                    {
+                        Debug.WriteLine($"Key: {key}, Error: {error.ErrorMessage}");
+                    }
                 }
             }
 
-            Product product = new Product
+            if (ModelState.IsValid)
             {
-                Name = request.Name,
-                Description = request.Description,
-                Price = request.Price,
-                Quantity = request.Quantity,
-                ImagePath = imagePath
-            };
+                var product = new Product
+                {
+                    Id = Guid.NewGuid(),
+                    Name = model.Name,
+                    Description = model.Description,
+                    Price = model.Price,
+                    Quantity = model.Quantity,
+                    CategoryId = model.CategoryId,
+                    CreatedData = DateTime.UtcNow
+                };
 
-            dbContext.Products.Add(product);
-            await dbContext.SaveChangesAsync();
+                if (model.Image != null)
+                {
+                    var fileName = Path.GetFileName(model.Image.FileName);
+                    var filePath = Path.Combine("wwwroot/images", fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        model.Image.CopyTo(stream);
+                    }
+                    product.ImagePath = "images/" + fileName;
+                }
 
-            return RedirectToAction("List");
+                dbContext.Products.Add(product);
+                dbContext.SaveChanges();
+
+                return RedirectToAction("List");
+            }
+            model.CategoriesList = dbContext.Categories.ToList();
+
+            return View(model);
         }
 
         [HttpGet]
@@ -110,47 +130,49 @@ namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
                 Description = product.Description,
                 Price = product.Price,
                 Quantity = product.Quantity,
-                ExistingImagePath = product.ImagePath
+                ExistingImagePath = product.ImagePath,
+                CategoryId = product.CategoryId,
             };
+            ViewBag.Categories = dbContext.Categories.ToList();
 
             return View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult Edit(ProductEditViewModel viewModel)
+        public IActionResult Edit(ProductEditViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var product = dbContext.Products.Find(viewModel.Id);
+                var product = dbContext.Products.Find(model.Id);
                 if (product == null)
                 {
                     return NotFound();
                 }
 
-                product.Name = viewModel.Name;
-                product.Description = viewModel.Description;
-                product.Price = viewModel.Price;
-                product.Quantity = viewModel.Quantity;
+                product.Name = model.Name;
+                product.Description = model.Description;
+                product.Price = model.Price;
+                product.Quantity = model.Quantity;
+                product.CategoryId = model.CategoryId;
 
-                if (viewModel.ImageFile != null)
+                if (model.Image != null)
                 {
-                    var fileName = Path.GetFileName(viewModel.ImageFile.FileName);
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
-
+                    var fileName = Path.GetFileName(model.Image.FileName);
+                    var filePath = Path.Combine("wwwroot/images", fileName);
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
-                        viewModel.ImageFile.CopyTo(stream);
+                        model.Image.CopyTo(stream);
                     }
-
-                    product.ImagePath = "images/" + fileName;
+                    product.ImagePath = "/images/" + fileName;
                 }
 
                 dbContext.Products.Update(product);
                 dbContext.SaveChanges();
-                return RedirectToAction("Details", new { id = product.Id });
+
+                return RedirectToAction("List");
             }
 
-            return View(viewModel);
+            return View(model);
         }
 
         [HttpPost]

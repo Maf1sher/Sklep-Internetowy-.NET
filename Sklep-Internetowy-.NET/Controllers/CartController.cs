@@ -5,6 +5,7 @@ using Sklep_Internetowy_.NET.Models.Entity;
 using Sklep_Internetowy_.NET.Models.ViewModel;
 using System.Diagnostics;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using test_do_projektu.Data;
 
 namespace Sklep_Internetowy_.NET.Controllers
@@ -92,7 +93,13 @@ namespace Sklep_Internetowy_.NET.Controllers
 
         private void SaveCartToCookies(List<CartItem> cart)
         {
-            var cartJson = JsonSerializer.Serialize(cart);
+            JsonSerializerOptions options = new()
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                WriteIndented = true
+            };
+
+            var cartJson = JsonSerializer.Serialize(cart, options);
             Response.Cookies.Append(CartCookieKey, cartJson, new CookieOptions
             {
                 Expires = DateTime.Now.AddDays(7)
@@ -220,6 +227,47 @@ namespace Sklep_Internetowy_.NET.Controllers
             }
 
             return View(order);
+        }
+
+        [HttpPost]
+        public IActionResult ReAddToCart(int orderId)
+        {
+            var order = _context.Orders
+                                .Include(o => o.OrderProducts)
+                                .ThenInclude(op => op.Product)
+                                .Include(o => o.Status)
+                                .FirstOrDefault(o => o.Id == orderId);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            if (order.Status.StatusName != "Anulowane")
+            {
+                return RedirectToAction("Index", "Cart");
+            }
+
+            var cart = GetCartFromCookies();
+
+            foreach (var orderProduct in order.OrderProducts)
+            {
+                var existingCartItem = cart.FirstOrDefault(c => c.Product.Id == orderProduct.ProductId);
+
+                if (existingCartItem != null)
+                {
+                    existingCartItem.Quantity += orderProduct.Quantity;
+                }
+                else
+                {
+                    var product = orderProduct.Product;
+                    cart.Add(new CartItem { Product = product, Quantity = orderProduct.Quantity });
+                }
+            }
+
+            SaveCartToCookies(cart);
+
+            return RedirectToAction("Index", "Cart");
         }
     }
 }

@@ -1,0 +1,25 @@
+﻿@model Sklep_Internetowy_.NET.Models.ViewModel.EditCategoryViewModel
+
+<h1>Edit Category</h1>
+
+<form asp-action="Edit" asp-controller="Category" method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
+
+    <div class="mb-3">
+        <label for="Name" class="form-label">Category Name</label>
+        <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="ParentCategoryId" class="form-label">Parent Category</label>
+        <select class="form-select" id="ParentCategoryId" name="ParentCategoryId" asp-for="@Model.ParentCategoryId">
+            <option value="">-- None --</option>
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category.Id">@category.Name</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>

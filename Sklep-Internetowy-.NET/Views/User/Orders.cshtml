@@ -33,6 +33,13 @@
                         <td>@order.Status</td>
                         <td>
                             <button class="btn btn-info btn-sm" onclick="toggleDetails(@order.Id)">View Details</button>
+
+                            @if (order.Status == "Anulowane")
+                            {
+                                <form method="post" action="@Url.Action("ReAddToCart", "Cart", new { orderId = order.Id })" style="display:inline;">
+                                    <button type="submit" class="btn btn-success btn-sm">Re-add to Cart</button>
+                                </form>
+                            }
                         </td>
                     </tr>
                     <tr id="order-details-@order.Id" class="order-details" style="display:none;">

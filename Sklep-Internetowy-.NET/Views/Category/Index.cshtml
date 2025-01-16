@@ -1,0 +1,25 @@
+﻿@model Sklep_Internetowy_.NET.Models.ViewModel.UserCategoryViewModel
+
+<div class="container">
+    <h1 class="my-4">@Model.Category.Name</h1>
+
+    <h3>Subcategories</h3>
+    <div class="list-group">
+        @foreach (var subCategory in Model.SubCategories)
+        {
+            <a asp-controller="Category" asp-action="Index" asp-route-categoryId="@subCategory.Id" class="list-group-item list-group-item-action">
+                @subCategory.Name
+            </a>
+        }
+    </div>
+
+    <h3 class="mt-4">Products</h3>
+    <div class="row">
+        @foreach (var product in Model.Products)
+        {
+            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl-2 col-6 mb-3">
+                @Html.Partial("_ProductCard", product)
+            </div>
+        }
+    </div>
+</div>

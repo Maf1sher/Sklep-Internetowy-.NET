@@ -1,28 +1,34 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Sklep_Internetowy_.NET.Models.Entity;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sklep_Internetowy_.NET.Areas.Admin.Models
 {
     public class ProductEditViewModel
     {
+        [Required]
         public Guid Id { get; set; }
 
-        [Required(ErrorMessage = "Product name is required.")]
-        [StringLength(100, ErrorMessage = "Product name cannot be longer than 100 characters.")]
+        [Required]
         public string Name { get; set; }
 
-        [StringLength(500, ErrorMessage = "Description cannot be longer than 500 characters.")]
+        [Required]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "Price is required.")]
+        [Required]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
         public decimal Price { get; set; }
 
-        [Required(ErrorMessage = "Quantity is required.")]
-        [Range(0, int.MaxValue, ErrorMessage = "Quantity must be a non-negative value.")]
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1.")]
         public int Quantity { get; set; }
 
-        public string? ExistingImagePath { get; set; }
+        public IFormFile Image { get; set; }
 
-        [Display(Name = "Product Image")]
-        public IFormFile? ImageFile { get; set; }
+        public string ExistingImagePath { get; set; }
+
+        [Required]
+        public Guid CategoryId { get; set; }
+
+        public List<Category> CategoriesList { get; set; } = new List<Category>();
     }
 }

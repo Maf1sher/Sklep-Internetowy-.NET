@@ -17,7 +17,8 @@ namespace test_do_projektu.Data
         public DbSet<ShippingMethod> ShippingMethods { get; set; }
         public DbSet<OrderStatus> OrderStatuses { get; set; }
         public DbSet<OrderProduct> OrderProducts { get; set; }
-        
+        public DbSet<Category> Categories { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -61,6 +62,20 @@ namespace test_do_projektu.Data
                 .WithOne(t => t.Status)
                 .HasForeignKey(c => c.StatusId);
             });
+
+            modelBuilder.Entity<Category>()
+                .HasOne(c => c.ParentCategory)
+                .WithMany(c => c.SubCategories)
+                .HasForeignKey(c => c.ParentCategoryId)
+                .OnDelete(DeleteBehavior.Restrict
+            );
+
+            modelBuilder.Entity<Product>()
+                .HasOne(p => p.Category)
+                .WithMany(c => c.Products)
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade
+            );
 
             modelBuilder.Entity<OrderStatus>().HasData(
                     new OrderStatus { Id = 1, StatusName = "Nowe" },

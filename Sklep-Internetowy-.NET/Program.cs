@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using Sklep_Internetowy_.NET.Service;
 using test_do_projektu.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 );
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+
+builder.Services.AddScoped<CategoryService>();
 
 var app = builder.Build();
 
@@ -44,6 +47,18 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Use(async (context, next) =>
+{
+    var categoryService = context.RequestServices.GetRequiredService<CategoryService>();
+    var categories = categoryService.GetRootCategories();
+
+    context.Items["Categories"] = categories;
+
+    await next.Invoke();
+});
+
+
 
 
 app.Run();

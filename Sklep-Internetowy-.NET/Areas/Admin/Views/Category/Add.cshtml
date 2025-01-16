@@ -1,0 +1,23 @@
+﻿@model Sklep_Internetowy_.NET.Models.ViewModel.CategoryViewModel
+
+<h1>Add Category</h1>
+
+<form asp-action="Add" asp-controller="Category" method="post">
+    <div class="mb-3">
+        <label for="Name" class="form-label">Category Name</label>
+        <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="ParentCategoryId" class="form-label">Parent Category (Optional)</label>
+        <select class="form-select" id="ParentCategoryId" name="ParentCategoryId">
+            <option value="">-- None --</option>
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category.Id">@category.Name</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Category</button>
+</form>

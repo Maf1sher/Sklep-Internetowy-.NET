@@ -1,4 +1,6 @@
-﻿namespace Sklep_Internetowy_.NET.Models.Entity;
+﻿using System.Text.Json.Serialization;
+
+namespace Sklep_Internetowy_.NET.Models.Entity;
 
 public class Product
 {
@@ -9,9 +11,12 @@ public class Product
     public int Quantity { get; set; }
     public DateTime CreatedData { get; set; } = DateTime.UtcNow;
     public string ImagePath { get; set; }
+    public Guid CategoryId { get; set; }
+    public Category Category { get; set; }
 
     public bool IsOnSale { get; set; } = false;
     public decimal? PreviousPrice { get; set; }
 
+    [JsonIgnore]
     public List<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
 }
