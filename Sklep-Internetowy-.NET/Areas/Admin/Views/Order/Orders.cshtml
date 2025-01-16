@@ -92,6 +92,7 @@
                                     <th>Nazwa</th>
                                     <th>Cena</th>
                                     <th>Ilość</th>
+                                    <th>Razem</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -100,13 +101,14 @@
                                     <tr>
                                         <td>@product.Product.Name</td>
                                         <td>@product.Product.Price PLN</td>
-                                        <td>@product.Product.Quantity</td>
+                                        <td>@product.Quantity</td>
+                                        <td>@(product.Product.Price * product.Quantity)</td>
                                     </tr>
-                                } tutaj
+                                }
                             </tbody>
                         </table>
 
-                       <h4>Łączna kwota: @order.OrderProducts.Sum(p => p.Product.Price * p.Quantity) PLN</h4>  tutaj
+                       <h4>Łączna kwota: @order.OrderProducts.Sum(p => p.Product.Price * p.Quantity) PLN</h4>
                     </div>
                 </td>
             </tr>

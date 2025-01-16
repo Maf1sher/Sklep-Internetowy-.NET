@@ -34,6 +34,10 @@ namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
                                  .OrderByDescending(o => o.CreatedData)
                                  .ToList();
 
+            var orderStatuses = _context.OrderStatuses.ToList();
+
+            ViewBag.OrderStatuses = orderStatuses;
+
             return View(orders);
         }
 
