@@ -1,0 +1,117 @@
+﻿@using Sklep_Internetowy_.NET.Models.Entity
+<div class="container py-5">
+<h2 class="text-center mb-4" style="color: #333;">Search Products</h2>
+<form method="get" asp-action="Search" class="mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 mb-3">
+            <input type="text" name="searchTerm" class="form-control form-control-lg" placeholder="Search" />
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-4 mb-3">
+            <select name="categoryId" class="form-control">
+                <option value="">Select Category</option>
+                @foreach (var category in (List<Category>)Context.Items["AllCategories"])
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label for="price-range" class="form-label">Price Range</label>
+            <div id="price-slider"></div>
+            <div class="d-flex justify-content-between mt-2">
+                <span>Min: <span id="min-price">0</span> PLN</span>
+                <span>Max: <span id="max-price">1000</span> PLN</span>
+            </div>
+            <input type="hidden" id="minPrice" name="minPrice" />
+            <input type="hidden" id="maxPrice" name="maxPrice" />
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-2 mb-3">
+            <button type="submit" class="btn btn-primary w-100">
+                Search
+            </button>
+        </div>
+    </div>
+</form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var priceSlider = document.getElementById('price-slider');
+
+    noUiSlider.create(priceSlider, {
+        start: [0, 1000],
+        connect: true,
+        range: {
+            'min': 0,
+            'max': 1000
+        },
+        step: 10,
+        tooltips: true,
+        format: {
+            to: function (value) {
+                return Math.round(value);
+            },
+            from: function (value) {
+                return Number(value);
+            }
+        }
+    });
+
+    var minPriceInput = document.getElementById('minPrice');
+    var maxPriceInput = document.getElementById('maxPrice');
+    var minPriceDisplay = document.getElementById('min-price');
+    var maxPriceDisplay = document.getElementById('max-price');
+
+    priceSlider.noUiSlider.on('update', function (values, handle) {
+        minPriceInput.value = values[0];
+        maxPriceInput.value = values[1];
+        minPriceDisplay.innerHTML = values[0];
+        maxPriceDisplay.innerHTML = values[1];
+    });
+});
+</script>
+
+
+<style>
+.form-control-lg {
+    font-size: 1.25rem;
+    padding: 0.75rem 1rem;
+}
+
+.form-control {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+}
+
+#price-slider {
+    height: 10px;
+    background-color: #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.noUi-tooltip {
+    font-size: 0.85rem;
+    padding: 4px 8px;
+}
+
+.btn {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+}
+
+.mb-3 {
+    margin-bottom: 1.5rem;
+}
+
+h2 {
+    font-weight: bold;
+}
+</style>

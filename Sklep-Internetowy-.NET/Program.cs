@@ -14,7 +14,6 @@ builder.Services.Configure<RazorViewEngineOptions>(options =>
     options.AreaViewLocationFormats.Add("/Views/Shared/{0}.cshtml");
 });
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -29,7 +28,6 @@ builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -54,8 +52,10 @@ app.Use(async (context, next) =>
 {
     var categoryService = context.RequestServices.GetRequiredService<CategoryService>();
     var categories = categoryService.GetRootCategories();
+    var allCategories = categoryService.GetAllCategories();
 
     context.Items["Categories"] = categories;
+    context.Items["AllCategories"] = allCategories;
 
     await next();
 });

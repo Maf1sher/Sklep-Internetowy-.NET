@@ -3,6 +3,7 @@ using Sklep_Internetowy_.NET.Models.ViewModel;
 using Sklep_Internetowy_.NET.Models.Entity;
 using test_do_projektu.Data;
 using Microsoft.EntityFrameworkCore;
+using iText.Commons.Actions.Contexts;
 
 namespace Sklep_Internetowy_.NET.Controllers
 {
@@ -80,6 +81,40 @@ namespace Sklep_Internetowy_.NET.Controllers
                 .ToList();
 
             return View(topSellingProducts);
+        }
+
+        public IActionResult Search(string searchTerm, Guid? categoryId, decimal? minPrice, decimal? maxPrice)
+        {
+            if (string.IsNullOrEmpty(searchTerm) && !categoryId.HasValue && !minPrice.HasValue && !maxPrice.HasValue)
+            {
+                return RedirectToAction("List");
+            }
+
+            var query = dbContext.Products.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query = query.Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm));
+            }
+
+            if (categoryId.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == categoryId.Value);
+            }
+
+            if (minPrice.HasValue)
+            {
+                query = query.Where(p => p.Price >= minPrice.Value);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(p => p.Price <= maxPrice.Value);
+            }
+
+            var products = query.ToList();
+
+            return View(products);
         }
     }
 }

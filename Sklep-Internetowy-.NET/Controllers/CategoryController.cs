@@ -94,13 +94,6 @@ namespace Sklep_Internetowy_.NET.Controllers
 
                 return File(memoryStream.ToArray(), "application/pdf", "PriceList.pdf");
             }
-
-
         }
-
-
-
     }
-
-
 }

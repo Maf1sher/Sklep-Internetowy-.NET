@@ -1,14 +1,12 @@
 ﻿@model Sklep_Internetowy_.NET.Models.ViewModel.UserCategoryViewModel
 
 <div class="container my-5">
-    <!-- Category Header -->
     <div class="row mb-4">
         <div class="col-12">
             <h1 class="display-4 text-primary">@Model.Category.Name</h1>
         </div>
     </div>
 
-    <!-- Generate Price List Button -->
     <div class="row mb-4">
         <div class="col-12">
             <a asp-area="" asp-controller="Category" asp-action="GeneratePriceList" asp-route-categoryId="@Model.Category.Id" class="btn btn-lg btn-success">
@@ -17,7 +15,6 @@
         </div>
     </div>
 
-    <!-- Subcategories Section -->
     <div class="row mb-4">
         <div class="col-12">
             <h3 class="h4 text-secondary">Subcategories</h3>

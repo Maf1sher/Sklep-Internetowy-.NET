@@ -4,7 +4,6 @@ namespace Sklep_Internetowy_.NET.Areas.Admin.Models
 {
     public class UserEditViewModel
     {
-        // Tylko pola, które będą edytowane
         [Required(ErrorMessage = "First name is required")]
         [MaxLength(50, ErrorMessage = "Max 50 characters allowed")]
         public string FirstName { get; set; }

@@ -1,6 +1,11 @@
-﻿@model Sklep_Internetowy_.NET.Models.ViewModel.ProductListViewModel
+﻿@using Sklep_Internetowy_.NET.Models.Entity
+
+@model Sklep_Internetowy_.NET.Models.ViewModel.ProductListViewModel
 
 <section>
+
+    @Html.Partial("_SearchBarPatrial")
+
     <div class="container py-5">
         <h2 class="text-center mb-4" style="color: #333;">New Arrivals</h2>
         <div class="row justify-content-center">
@@ -44,7 +49,6 @@
             }
         </div>
     </div>
-
     <div class="container py-5">
         <h2 class="text-center mb-4" style="color: #333;">All Products</h2>
         <div class="row justify-content-center">
@@ -57,4 +61,3 @@
         </div>
     </div>
 </section>
-

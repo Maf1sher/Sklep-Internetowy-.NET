@@ -20,6 +20,11 @@ namespace Sklep_Internetowy_.NET.Service
                 .Include(c => c.SubCategories)
                 .ToList();
         }
+
+        public List<Category> GetAllCategories()
+        {
+            return _context.Categories.ToList();
+        }
     }
 
 }

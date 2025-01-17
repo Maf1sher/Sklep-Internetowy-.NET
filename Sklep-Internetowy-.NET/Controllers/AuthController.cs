@@ -75,10 +75,6 @@ namespace Sklep_Internetowy_.NET.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var user = _context.Users.Where(x =>
-                //x.Email == request.Email && x.Password == request.Password)
-                //    .FirstOrDefault();
-
                 var user = _context.Users.Where(x =>
                 x.Email == request.Email)
                     .FirstOrDefault();

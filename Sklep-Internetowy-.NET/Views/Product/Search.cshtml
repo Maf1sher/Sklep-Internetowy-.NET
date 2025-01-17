@@ -1,0 +1,24 @@
+﻿@model List<Sklep_Internetowy_.NET.Models.Entity.Product>
+
+<section>
+    <div class="container py-5">
+        
+        @Html.Partial("_SearchBarPatrial")
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="row justify-content-center">
+                @foreach (var product in Model)
+                {
+                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl-2 col-6 mb-3 my-3">
+                        @Html.Partial("_ProductCard", product)
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-center">No products found for your search.</p>
+        }
+    </div>
+</section>
