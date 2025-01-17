@@ -51,9 +51,10 @@
             @foreach (var product in Model.AllProducts)
             {
                 <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl-2 col-6 mb-3">
-                    @Html.Partial("_ProductCard", product)
+                        @Html.Partial("_ProductCard", product)
                 </div>
             }
         </div>
     </div>
 </section>
+

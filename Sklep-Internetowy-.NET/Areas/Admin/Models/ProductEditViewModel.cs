@@ -1,5 +1,6 @@
 ﻿using Sklep_Internetowy_.NET.Models.Entity;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 
 namespace Sklep_Internetowy_.NET.Areas.Admin.Models
 {

@@ -1,4 +1,6 @@
-﻿namespace Sklep_Internetowy_.NET.Models.Entity
+﻿using System.Text.Json.Serialization;
+
+namespace Sklep_Internetowy_.NET.Models.Entity
 {
     public class Category
     {
@@ -9,8 +11,10 @@
         public Guid? ParentCategoryId { get; set; }
         public Category? ParentCategory { get; set; }
 
-        public ICollection<Category> SubCategories { get; set; } = new List<Category>();
+        [JsonIgnore]
+        public List<Category> SubCategories { get; set; } = new List<Category>();
 
-        public ICollection<Product> Products { get; set; } = new List<Product>();
+        [JsonIgnore]
+        public List<Product> Products { get; set; } = new List<Product>();
     }
 }

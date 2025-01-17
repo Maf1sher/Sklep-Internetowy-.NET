@@ -36,20 +36,6 @@ namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Add(AddProductRequest model)
         {
-            if (!ModelState.IsValid)
-            {
-                foreach (var modelState in ModelState)
-                {
-                    var key = modelState.Key;
-                    var errors = modelState.Value.Errors;
-
-                    foreach (var error in errors)
-                    {
-                        Debug.WriteLine($"Key: {key}, Error: {error.ErrorMessage}");
-                    }
-                }
-            }
-
             if (ModelState.IsValid)
             {
                 var product = new Product
@@ -132,8 +118,8 @@ namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
                 Quantity = product.Quantity,
                 ExistingImagePath = product.ImagePath,
                 CategoryId = product.CategoryId,
+                CategoriesList = dbContext.Categories.ToList()
             };
-            ViewBag.Categories = dbContext.Categories.ToList();
 
             return View(viewModel);
         }
@@ -141,6 +127,9 @@ namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Edit(ProductEditViewModel model)
         {
+            ModelState.Remove("Image");
+            ModelState.Remove("ExistingImagePath");
+
             if (ModelState.IsValid)
             {
                 var product = dbContext.Products.Find(model.Id);
@@ -163,7 +152,7 @@ namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
                     {
                         model.Image.CopyTo(stream);
                     }
-                    product.ImagePath = "/images/" + fileName;
+                    product.ImagePath = "images/" + fileName;
                 }
 
                 dbContext.Products.Update(product);
@@ -171,7 +160,7 @@ namespace Sklep_Internetowy_.NET.Areas.Admin.Controllers
 
                 return RedirectToAction("List");
             }
-
+            model.CategoriesList = dbContext.Categories.ToList();
             return View(model);
         }
 

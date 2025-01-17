@@ -67,5 +67,19 @@ namespace Sklep_Internetowy_.NET.Controllers
             return View(onSaleProducts);
         }
 
+        public IActionResult TopSelling()
+        {
+            var topSellingProducts = dbContext.Products
+                .Select(p => new TopSellingProductViewModel
+                {
+                    Product = p,
+                    SoldQuantity = p.OrderProducts.Sum(op => op.Quantity)
+                })
+                .OrderByDescending(x => x.SoldQuantity)
+                .Take(10)
+                .ToList();
+
+            return View(topSellingProducts);
+        }
     }
 }

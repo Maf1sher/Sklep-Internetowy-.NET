@@ -25,6 +25,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddScoped<CategoryService>();
 
+builder.Services.AddScoped<IProductService, ProductService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -55,9 +57,8 @@ app.Use(async (context, next) =>
 
     context.Items["Categories"] = categories;
 
-    await next.Invoke();
+    await next();
 });
-
 
 
 

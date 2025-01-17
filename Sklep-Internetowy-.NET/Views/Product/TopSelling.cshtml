@@ -1,0 +1,30 @@
+﻿@model List<Sklep_Internetowy_.NET.Models.ViewModel.TopSellingProductViewModel>
+
+@{
+    ViewData["Title"] = "Top Selling Products";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Top 10 Best Selling Products</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <p>No products have been sold yet.</p>
+    }
+    else
+    {
+        <div class="row d-flex justify-content-center">
+            @foreach (var product in Model)
+            {
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl-2 col-6 mb-4 my-5">
+                    <p class="text-center">
+                        <span class="badge bg-success">
+                            Sold: @product.SoldQuantity
+                        </span>
+                    </p>
+                    @Html.Partial("_ProductCard", product.Product)
+                </div>
+            }
+        </div>
+    }
+</div>
